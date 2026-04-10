@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <!-- Target Windows 10 19041 (May 2020 Update) for Windows.Media.Ocr support -->
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <RootNamespace>LittleOCR</RootNamespace>
+    <AssemblyName>LittleOCR</AssemblyName>
+    <ApplicationIcon>Assets\app.ico</ApplicationIcon>
+    <Platforms>x64</Platforms>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
+  </PropertyGroup>
+
+  <!--
+    No external NuGet packages required.
+    Windows.Media.Ocr is part of the Windows Runtime, accessible via the
+    net8.0-windows10.0.19041.0 TFM without any additional package reference.
+  -->
+
+</Project>
