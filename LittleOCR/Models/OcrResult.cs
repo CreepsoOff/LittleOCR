@@ -39,5 +39,17 @@ public record OcrWord(string Text, OcrRect BoundingBox);
 /// <summary>Recognized line containing one or more words.</summary>
 public record OcrLine(string Text, IReadOnlyList<OcrWord> Words, OcrRect BoundingBox);
 
-/// <summary>Complete OCR analysis result for a single image.</summary>
-public record OcrResult(string FullText, IReadOnlyList<OcrLine> Lines);
+/// <summary>
+/// Single recognized character with its bounding box and grouping identifiers.
+/// <para><see cref="WordId"/> is a document-wide word index; characters sharing the same
+/// <see cref="WordId"/> belong to the same word and should be concatenated without a space.</para>
+/// <para><see cref="LineId"/> is a document-wide line index used to insert line breaks when copying.</para>
+/// </summary>
+public record OcrChar(string Text, OcrRect BoundingBox, int WordId, int LineId);
+
+/// <summary>
+/// Complete OCR analysis result for a single image.
+/// <para><see cref="Chars"/> is populated only by engines that support character-level output
+/// (e.g. Tesseract). It is <c>null</c> for word/line-only engines.</para>
+/// </summary>
+public record OcrResult(string FullText, IReadOnlyList<OcrLine> Lines, IReadOnlyList<OcrChar>? Chars = null);

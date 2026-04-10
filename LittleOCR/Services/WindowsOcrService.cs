@@ -13,7 +13,7 @@ namespace LittleOCR.Services;
 /// Works 100% offline; no cloud calls or external processes are involved.
 /// Requirements: Windows 10 build 19041+ with at least one OCR language pack installed.
 /// </summary>
-public sealed class WindowsOcrService
+public sealed class WindowsOcrService : IOcrService
 {
     /// <summary>Returns true if at least one OCR language is available on this machine.</summary>
     public static bool IsAvailable() => WinOcr.OcrEngine.AvailableRecognizerLanguages.Count > 0;

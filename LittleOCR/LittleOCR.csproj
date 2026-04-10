@@ -20,9 +20,12 @@
   </PropertyGroup>
 
   <!--
-    No external NuGet packages required.
-    Windows.Media.Ocr is part of the Windows Runtime, accessible via the
-    net8.0-windows10.0.19041.0 TFM without any additional package reference.
+    Tesseract 5 provides character-level bounding boxes (PageIteratorLevel.Symbol),
+    enabling character-by-character overlay selection.
+    Requires tessdata files in a tessdata/ folder next to the exe.
   -->
+  <ItemGroup>
+    <PackageReference Include="Tesseract" Version="5.2.0"/>
+  </ItemGroup>
 
 </Project>

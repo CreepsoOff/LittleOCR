@@ -41,26 +41,43 @@ jobs:
             -o publish
         shell: pwsh
 
-      - name: Install UPX
-        run: choco install upx --yes --no-progress
+      # ── Tesseract language data ──────────────────────────────────────────────
+      # Placed in publish/tessdata/ so the exe finds them next to itself.
+      # Uses tessdata-fast models (~4 MB each) for a good speed/accuracy balance.
+      # Users who only need Windows OCR can skip this folder — it is only required
+      # when the "Tesseract (caractères)" engine is selected inside the app.
+      - name: Download Tesseract language data
+        run: |
+          $tessDir = "publish\tessdata"
+          New-Item -ItemType Directory -Force -Path $tessDir | Out-Null
+          Invoke-WebRequest -Uri "https://github.com/tesseract-ocr/tessdata_fast/raw/main/fra.traineddata" `
+            -OutFile "$tessDir\fra.traineddata"
+          Invoke-WebRequest -Uri "https://github.com/tesseract-ocr/tessdata_fast/raw/main/eng.traineddata" `
+            -OutFile "$tessDir\eng.traineddata"
         shell: pwsh
 
-      - name: Compress with UPX
-        id: upx
-        run: upx --best --lzma publish/LittleOCR.exe
+      # ── Create release archive ───────────────────────────────────────────────
+      # The zip bundles the exe + tessdata together so the Tesseract engine works
+      # out of the box. Users who only need Windows OCR can extract just the exe.
+      - name: Create release archive
+        run: |
+          Push-Location publish
+          Compress-Archive -Path @("LittleOCR.exe", "tessdata") -DestinationPath "LittleOCR.zip"
+          Pop-Location
         shell: pwsh
-        continue-on-error: true
 
-      - name: Warn if UPX compression failed
-        if: steps.upx.outcome == 'failure'
-        run: Write-Warning "UPX compression failed or is unsupported for this binary; artifact will be uploaded uncompressed."
-        shell: pwsh
-
-      - name: Upload artifact
+      - name: Upload EXE artifact
         uses: actions/upload-artifact@v4
         with:
-          name: LittleOCR
+          name: LittleOCR-exe
           path: publish/LittleOCR.exe
+          if-no-files-found: error
+
+      - name: Upload ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: LittleOCR-zip
+          path: publish/LittleOCR.zip
           if-no-files-found: error
 
   release:
@@ -71,10 +88,16 @@ jobs:
       contents: write
 
     steps:
-      - name: Download artifact
+      - name: Download EXE artifact
         uses: actions/download-artifact@v4
         with:
-          name: LittleOCR
+          name: LittleOCR-exe
+          path: dist
+
+      - name: Download ZIP artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: LittleOCR-zip
           path: dist
 
       - name: Create or update pre-release
@@ -84,4 +107,7 @@ jobs:
           name: ${{ github.event.inputs.tag }}
           prerelease: true
           make_latest: false
-          files: dist/LittleOCR.exe
+          files: |
+            dist/LittleOCR.exe
+            dist/LittleOCR.zip
+

@@ -58,6 +58,15 @@
                         DockPanel.Dock="Left"
                         Margin="0,0,4,0"/>
 
+                <!-- Engine selector -->
+                <ComboBox ItemsSource="{Binding EngineOptions}"
+                          SelectedItem="{Binding SelectedEngineOption}"
+                          DisplayMemberPath="Label"
+                          Style="{StaticResource ToolbarComboBoxStyle}"
+                          ToolTip="Choisir le moteur OCR"
+                          DockPanel.Dock="Left"
+                          Margin="0,0,4,0"/>
+
                 <!-- Copy-all shortcut in toolbar (only when OCR done) -->
                 <Button Content="📋  Copier tout"
                         Command="{Binding CopyAllCommand}"
