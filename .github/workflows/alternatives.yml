@@ -1,4 +1,4 @@
-name: Build Alternatives
+name: Build Alternative
 
 on:
   push:
