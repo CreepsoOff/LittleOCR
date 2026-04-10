@@ -46,9 +46,11 @@ public sealed class TesseractOcrService : IOcrService
     {
         var tessdata = FindTessdata()
             ?? throw new InvalidOperationException(
-                "Tesseract : dossier tessdata introuvable.\n" +
-                "Placez fra.traineddata (ou eng.traineddata) dans un dossier tessdata/ " +
-                "situé à côté de LittleOCR.exe, puis relancez l'OCR.");
+                "Tesseract : aucun dossier tessdata trouvé.\n" +
+                "Placez fra.traineddata (ou eng.traineddata) dans l'un de ces emplacements :\n" +
+                $"  • {TessdataSearchPaths[0]}\n" +
+                $"  • {TessdataSearchPaths[1]}\n" +
+                $"  • {TessdataSearchPaths[2]}");
 
         return await Task.Run(() => RunTesseract(imagePath, tessdata));
     }
@@ -108,8 +110,8 @@ public sealed class TesseractOcrService : IOcrService
             }
 
             // ── Process the current character (Symbol) ─────────────────────────
-            var charText = iter.GetText(PageIteratorLevel.Symbol)?.Trim() ?? string.Empty;
-            if (!string.IsNullOrEmpty(charText) &&
+            var charText = iter.GetText(PageIteratorLevel.Symbol);
+            if (!string.IsNullOrWhiteSpace(charText) &&
                 iter.TryGetBoundingBox(PageIteratorLevel.Symbol, out var cb))
             {
                 var ocrChar = new OcrChar(

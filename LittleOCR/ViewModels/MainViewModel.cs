@@ -322,11 +322,11 @@ public sealed class MainViewModel : INotifyPropertyChanged
         }
         else if (mode == OcrEngineMode.WindowsLine)
         {
-            int lid = 0;
+            int lineId = 0;
             foreach (var line in _ocrResult.Lines)
             {
-                OverlayItems.Add(new OcrOverlayItem(line.Text, line.BoundingBox, lid, lid));
-                lid++;
+                OverlayItems.Add(new OcrOverlayItem(line.Text, line.BoundingBox, lineId, lineId));
+                lineId++;
             }
         }
         else // WindowsWord (or Tesseract without char data — fallback to word level)
