@@ -1,4 +1,4 @@
-name: Build
+name: Build Alternative
 
 on:
   push:
@@ -110,4 +110,3 @@ jobs:
           files: |
             dist/LittleOCR.exe
             dist/LittleOCR.zip
-

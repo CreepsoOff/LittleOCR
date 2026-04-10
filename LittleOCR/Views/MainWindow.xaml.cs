@@ -109,7 +109,7 @@ public partial class MainWindow : Window
 
         foreach (var item in ViewModel.OverlayItems)
         {
-            var box = item.Line.BoundingBox;
+            var box = item.BoundingBox;
 
             double cx = offsetX + box.X * scaleX;
             double cy = offsetY + box.Y * scaleY;
@@ -186,7 +186,7 @@ public partial class MainWindow : Window
             Fill            = new SolidColorBrush(item.IsSelected ? OverlaySelectedColor : OverlayNormalColor),
             Stroke          = new SolidColorBrush(item.IsSelected ? StrokeSelected       : StrokeNormal),
             Cursor          = Cursors.Hand,
-            ToolTip         = item.Line.Text,
+            ToolTip         = item.Text,
             Tag             = item,
         };
 

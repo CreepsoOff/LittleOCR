@@ -96,6 +96,141 @@
     </ControlTemplate>
 
     <!-- ═══════════════════════════════════════════════════════════════════════
+         TOOLBAR COMBO BOX  (engine selector, dark theme)
+    ═══════════════════════════════════════════════════════════════════════════ -->
+    <Style x:Key="ToolbarComboBoxStyle" TargetType="ComboBox">
+        <Setter Property="Background"                          Value="#FF2D2D30"/>
+        <Setter Property="Foreground"                          Value="{StaticResource AppTextBrush}"/>
+        <Setter Property="BorderBrush"                         Value="{StaticResource AppBorderBrush}"/>
+        <Setter Property="BorderThickness"                     Value="1"/>
+        <Setter Property="Padding"                             Value="8,5,4,5"/>
+        <Setter Property="FontFamily"                          Value="{StaticResource AppFont}"/>
+        <Setter Property="FontSize"                            Value="13"/>
+        <Setter Property="MinWidth"                            Value="185"/>
+        <Setter Property="MaxDropDownHeight"                   Value="200"/>
+        <Setter Property="VerticalContentAlignment"            Value="Center"/>
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility"   Value="Auto"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBox">
+                    <Grid>
+                        <!-- Visible border with selected-item text -->
+                        <Border x:Name="Border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6"
+                                SnapsToDevicePixels="True">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="20"/>
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter Grid.Column="0"
+                                                  Content="{TemplateBinding SelectionBoxItem}"
+                                                  ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                  Margin="{TemplateBinding Padding}"
+                                                  VerticalAlignment="Center"
+                                                  IsHitTestVisible="False"/>
+                                <!-- Dropdown arrow -->
+                                <Path Grid.Column="1"
+                                      Data="M 0 0 L 5 5 L 10 0 Z"
+                                      Fill="{StaticResource AppTextMutedBrush}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      IsHitTestVisible="False"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Full-area toggle button for click handling -->
+                        <ToggleButton IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                      Background="Transparent"
+                                      BorderThickness="0"
+                                      Focusable="False"
+                                      ClickMode="Press">
+                            <ToggleButton.Template>
+                                <ControlTemplate TargetType="ToggleButton">
+                                    <Border Background="Transparent"/>
+                                </ControlTemplate>
+                            </ToggleButton.Template>
+                        </ToggleButton>
+
+                        <!-- Dropdown popup -->
+                        <Popup IsOpen="{TemplateBinding IsDropDownOpen}"
+                               Placement="Bottom"
+                               AllowsTransparency="True"
+                               Focusable="False"
+                               PopupAnimation="Slide"
+                               SnapsToDevicePixels="True">
+                            <Border Background="#FF252526"
+                                    BorderBrush="{StaticResource AppBorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="6"
+                                    Padding="3,3"
+                                    MinWidth="{TemplateBinding ActualWidth}"
+                                    MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                                    SnapsToDevicePixels="True">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="#000000" Opacity="0.5"
+                                                      BlurRadius="14" ShadowDepth="4"/>
+                                </Border.Effect>
+                                <ScrollViewer SnapsToDevicePixels="True">
+                                    <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                </ScrollViewer>
+                            </Border>
+                        </Popup>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#FF6A6A72"/>
+                        </Trigger>
+                        <Trigger Property="IsDropDownOpen" Value="True">
+                            <Setter TargetName="Border" Property="BorderBrush"
+                                    Value="{StaticResource AppAccentBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Border" Property="Opacity" Value="0.4"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <!-- Per-item style inside the dropdown -->
+        <Style.Resources>
+            <Style TargetType="ComboBoxItem">
+                <Setter Property="Foreground"    Value="{StaticResource AppTextBrush}"/>
+                <Setter Property="Background"    Value="Transparent"/>
+                <Setter Property="Padding"       Value="10,6"/>
+                <Setter Property="FontFamily"    Value="{StaticResource AppFont}"/>
+                <Setter Property="FontSize"      Value="13"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ComboBoxItem">
+                            <Border x:Name="Bd"
+                                    Background="{TemplateBinding Background}"
+                                    Padding="{TemplateBinding Padding}"
+                                    CornerRadius="4">
+                                <ContentPresenter/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsHighlighted" Value="True">
+                                    <Setter TargetName="Bd" Property="Background" Value="#FF3A3A3F"/>
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter TargetName="Bd" Property="Background" Value="#FF37373D"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </Style.Resources>
+    </Style>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
          TOOLBAR BUTTON  (transparent, hover border)
     ═══════════════════════════════════════════════════════════════════════════ -->
     <Style x:Key="ToolbarButtonStyle" TargetType="Button">
