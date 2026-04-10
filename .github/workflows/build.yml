@@ -1,0 +1,59 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Publish single-file EXE
+        run: |
+          dotnet publish LittleOCR/LittleOCR.csproj `
+            -c Release `
+            -r win-x64 `
+            --self-contained true `
+            -p:PublishSingleFile=true `
+            -p:IncludeNativeLibrariesForSelfExtract=true `
+            -p:EnableCompressionInSingleFile=true `
+            -p:DebugType=none `
+            -p:DebugSymbols=false `
+            -o publish
+        shell: pwsh
+
+      - name: Install UPX
+        run: choco install upx --yes --no-progress
+        shell: pwsh
+
+      - name: Compress with UPX
+        id: upx
+        run: upx --best --lzma publish/LittleOCR.exe
+        shell: pwsh
+        continue-on-error: true
+
+      - name: Warn if UPX compression failed
+        if: steps.upx.outcome == 'failure'
+        run: Write-Warning "UPX compression failed or is unsupported for this binary; artifact will be uploaded uncompressed."
+        shell: pwsh
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: LittleOCR
+          path: publish/LittleOCR.exe
+          if-no-files-found: error
