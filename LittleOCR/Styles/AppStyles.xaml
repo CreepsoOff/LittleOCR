@@ -22,12 +22,12 @@
     <SolidColorBrush x:Key="AppSurfaceBrush"   Color="{StaticResource AppSurfaceColor}"/>
     <SolidColorBrush x:Key="AppSurface2Brush"  Color="{StaticResource AppSurface2Color}"/>
     <SolidColorBrush x:Key="AppBorderBrush"    Color="{StaticResource AppBorderColor}"/>
-    <SolidColorBrush x:Key="AppAccentBrush"   Color="{StaticResource AppAccentColor}"/>
-    <SolidColorBrush x:Key="AppTextBrush"     Color="{StaticResource AppTextColor}"/>
-    <SolidColorBrush x:Key="AppTextMutedBrush"  Color="{StaticResource AppTextMutedColor}"/>
-    <SolidColorBrush x:Key="AppSuccessBrush"  Color="{StaticResource AppSuccessColor}"/>
-    <SolidColorBrush x:Key="AppErrorBrush"    Color="{StaticResource AppErrorColor}"/>
-    <SolidColorBrush x:Key="AppWarningBrush"  Color="{StaticResource AppWarningColor}"/>
+    <SolidColorBrush x:Key="AppAccentBrush"    Color="{StaticResource AppAccentColor}"/>
+    <SolidColorBrush x:Key="AppTextBrush"      Color="{StaticResource AppTextColor}"/>
+    <SolidColorBrush x:Key="AppTextMutedBrush" Color="{StaticResource AppTextMutedColor}"/>
+    <SolidColorBrush x:Key="AppSuccessBrush"   Color="{StaticResource AppSuccessColor}"/>
+    <SolidColorBrush x:Key="AppErrorBrush"     Color="{StaticResource AppErrorColor}"/>
+    <SolidColorBrush x:Key="AppWarningBrush"   Color="{StaticResource AppWarningColor}"/>
 
     <!-- ═══════════════════════════════════════════════════════════════════════
          TYPOGRAPHY

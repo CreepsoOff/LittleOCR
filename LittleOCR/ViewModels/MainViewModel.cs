@@ -14,6 +14,8 @@ namespace LittleOCR.ViewModels;
 
 public enum OcrState { Idle, Running, Success, Error }
 
+public enum StatusLevel { Info, Warning, Error }
+
 // ── Overlay item ───────────────────────────────────────────────────────────────
 
 /// <summary>
@@ -57,6 +59,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
     private OcrState _ocrState = OcrState.Idle;
     private bool _isOverlayVisible = true;
     private string _statusMessage = string.Empty;
+    private StatusLevel _statusLevel = StatusLevel.Info;
 
     // ── Properties ────────────────────────────────────────────────────────────
 
@@ -126,6 +129,12 @@ public sealed class MainViewModel : INotifyPropertyChanged
         }
     }
 
+    public StatusLevel StatusLevel
+    {
+        get => _statusLevel;
+        private set { _statusLevel = value; OnPropertyChanged(); }
+    }
+
     public bool HasStatusMessage => !string.IsNullOrEmpty(_statusMessage);
 
     /// <summary>Lines returned by the last OCR run, each wrapped with selection state.</summary>
@@ -152,7 +161,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         ToggleOverlayCommand = new RelayCommand(
                                     () => IsOverlayVisible = !IsOverlayVisible,
                                     () => HasOcrResult);
-        ClearStatusCommand   = new RelayCommand(() => StatusMessage = string.Empty);
+        ClearStatusCommand   = new RelayCommand(() => SetStatus(string.Empty, StatusLevel.Info));
     }
 
     // ── Public API ────────────────────────────────────────────────────────────
@@ -172,15 +181,21 @@ public sealed class MainViewModel : INotifyPropertyChanged
             _imagePath    = path;
             OcrResult     = null;
             OcrState      = OcrState.Idle;
-            StatusMessage = string.Empty;
+            SetStatus(string.Empty, StatusLevel.Info);
         }
         catch (Exception ex)
         {
-            StatusMessage = $"Impossible d'ouvrir l'image : {ex.Message}";
+            SetStatus($"Impossible d'ouvrir l'image : {ex.Message}", StatusLevel.Error);
         }
     }
 
     // ── Private helpers ───────────────────────────────────────────────────────
+
+    private void SetStatus(string message, StatusLevel level)
+    {
+        StatusLevel   = level;
+        StatusMessage = message;
+    }
 
     private void OpenImage()
     {
@@ -198,8 +213,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
     {
         if (_imagePath is null) return;
 
-        OcrState      = OcrState.Running;
-        StatusMessage = string.Empty;
+        OcrState = OcrState.Running;
+        SetStatus(string.Empty, StatusLevel.Info);
 
         try
         {
@@ -209,19 +224,19 @@ public sealed class MainViewModel : INotifyPropertyChanged
             OcrState  = OcrState.Success;
 
             if (!result.Lines.Any())
-                StatusMessage = "Aucun texte n'a été détecté dans cette image.";
+                SetStatus("Aucun texte n'a été détecté dans cette image.", StatusLevel.Warning);
             else
                 IsOverlayVisible = true;
         }
         catch (InvalidOperationException ex)
         {
-            OcrState      = OcrState.Error;
-            StatusMessage = ex.Message;
+            OcrState = OcrState.Error;
+            SetStatus(ex.Message, StatusLevel.Error);
         }
         catch (Exception ex)
         {
-            OcrState      = OcrState.Error;
-            StatusMessage = $"Erreur OCR : {ex.Message}";
+            OcrState = OcrState.Error;
+            SetStatus($"Erreur OCR : {ex.Message}", StatusLevel.Error);
         }
     }
 

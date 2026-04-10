@@ -233,10 +233,25 @@
                         VerticalAlignment="Center"
                         ToolTip="Fermer"/>
                 <TextBlock Text="{Binding StatusMessage}"
-                           Foreground="{StaticResource AppWarningBrush}"
                            FontSize="12"
                            VerticalAlignment="Center"
-                           TextWrapping="Wrap"/>
+                           TextWrapping="Wrap">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="{StaticResource AppTextMutedBrush}"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding StatusLevel}"
+                                             Value="{x:Static vm:StatusLevel.Warning}">
+                                    <Setter Property="Foreground" Value="{StaticResource AppWarningBrush}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding StatusLevel}"
+                                             Value="{x:Static vm:StatusLevel.Error}">
+                                    <Setter Property="Foreground" Value="{StaticResource AppErrorBrush}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
             </DockPanel>
         </Border>
 
