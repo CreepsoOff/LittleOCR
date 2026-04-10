@@ -1,0 +1,269 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         COLOUR PALETTE
+    ═══════════════════════════════════════════════════════════════════════════ -->
+    <Color x:Key="AppBgColor">#FF1A1A1A</Color>
+    <Color x:Key="AppSurfaceColor">#FF252526</Color>
+    <Color x:Key="AppSurface2Color">#FF2D2D30</Color>
+    <Color x:Key="AppBorderColor">#FF3F3F46</Color>
+    <Color x:Key="AppAccentColor">#FF0078D4</Color>
+    <Color x:Key="AppAccentHoverColor">#FF1A8CE8</Color>
+    <Color x:Key="AppAccentPressedColor">#FF005EA6</Color>
+    <Color x:Key="AppTextColor">#FFE8E8E8</Color>
+    <Color x:Key="AppTextMutedColor">#FF9D9D9D</Color>
+    <Color x:Key="AppSuccessColor">#FF4CAF50</Color>
+    <Color x:Key="AppErrorColor">#FFF44336</Color>
+    <Color x:Key="AppWarningColor">#FFFF9800</Color>
+
+    <SolidColorBrush x:Key="AppBgBrush"        Color="{StaticResource AppBgColor}"/>
+    <SolidColorBrush x:Key="AppSurfaceBrush"   Color="{StaticResource AppSurfaceColor}"/>
+    <SolidColorBrush x:Key="AppSurface2Brush"  Color="{StaticResource AppSurface2Color}"/>
+    <SolidColorBrush x:Key="AppBorderBrush"    Color="{StaticResource AppBorderColor}"/>
+    <SolidColorBrush x:Key="AppAccentBrush"   Color="{StaticResource AppAccentColor}"/>
+    <SolidColorBrush x:Key="AppTextBrush"     Color="{StaticResource AppTextColor}"/>
+    <SolidColorBrush x:Key="AppTextMutedBrush"Color="{StaticResource AppTextMutedColor}"/>
+    <SolidColorBrush x:Key="AppSuccessBrush"  Color="{StaticResource AppSuccessColor}"/>
+    <SolidColorBrush x:Key="AppErrorBrush"    Color="{StaticResource AppErrorColor}"/>
+    <SolidColorBrush x:Key="AppWarningBrush"  Color="{StaticResource AppWarningColor}"/>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         TYPOGRAPHY
+    ═══════════════════════════════════════════════════════════════════════════ -->
+    <FontFamily x:Key="AppFont">Segoe UI Variable, Segoe UI, sans-serif</FontFamily>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         SCROLLBAR — minimal dark variant
+    ═══════════════════════════════════════════════════════════════════════════ -->
+    <Style TargetType="ScrollBar">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Width" Value="6"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ScrollBar">
+                    <Grid Background="Transparent">
+                        <Track x:Name="PART_Track" IsDirectionReversed="True">
+                            <Track.Thumb>
+                                <Thumb>
+                                    <Thumb.Template>
+                                        <ControlTemplate TargetType="Thumb">
+                                            <Border Background="#555" CornerRadius="3"
+                                                    Margin="1,2"/>
+                                        </ControlTemplate>
+                                    </Thumb.Template>
+                                </Thumb>
+                            </Track.Thumb>
+                        </Track>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="Orientation" Value="Horizontal">
+                <Setter Property="Height" Value="6"/>
+                <Setter Property="Width" Value="Auto"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         BUTTON HELPER TEMPLATE (shared base with CornerRadius)
+    ═══════════════════════════════════════════════════════════════════════════ -->
+    <ControlTemplate x:Key="RoundedButtonTemplate" TargetType="Button">
+        <Border x:Name="Root"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="6"
+                Padding="{TemplateBinding Padding}"
+                SnapsToDevicePixels="True">
+            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                              RecognizesAccessKey="True"/>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="Root" Property="Opacity" Value="0.85"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter TargetName="Root" Property="Opacity" Value="0.7"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter TargetName="Root" Property="Opacity" Value="0.4"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         TOOLBAR BUTTON  (transparent, hover border)
+    ═══════════════════════════════════════════════════════════════════════════ -->
+    <Style x:Key="ToolbarButtonStyle" TargetType="Button">
+        <Setter Property="Background"       Value="Transparent"/>
+        <Setter Property="Foreground"       Value="{StaticResource AppTextBrush}"/>
+        <Setter Property="BorderBrush"      Value="Transparent"/>
+        <Setter Property="BorderThickness"  Value="1"/>
+        <Setter Property="Padding"          Value="10,5"/>
+        <Setter Property="FontFamily"       Value="{StaticResource AppFont}"/>
+        <Setter Property="FontSize"         Value="13"/>
+        <Setter Property="Cursor"           Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Root"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="6"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Root" Property="Background" Value="#FF333338"/>
+                            <Setter TargetName="Root" Property="BorderBrush" Value="{StaticResource AppBorderBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Root" Property="Background" Value="#FF252526"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{StaticResource AppTextMutedBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         PRIMARY BUTTON  (accent-coloured, for empty-state CTA)
+    ═══════════════════════════════════════════════════════════════════════════ -->
+    <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+        <Setter Property="Background"      Value="{StaticResource AppAccentBrush}"/>
+        <Setter Property="Foreground"      Value="White"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding"         Value="20,10"/>
+        <Setter Property="FontFamily"      Value="{StaticResource AppFont}"/>
+        <Setter Property="FontSize"        Value="14"/>
+        <Setter Property="Cursor"          Value="Hand"/>
+        <Setter Property="Template"        Value="{StaticResource RoundedButtonTemplate}"/>
+    </Style>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         ACTION BUTTON  (OCR action bar: Copier tout, Copier la sélection, …)
+    ═══════════════════════════════════════════════════════════════════════════ -->
+    <Style x:Key="ActionButtonStyle" TargetType="Button">
+        <Setter Property="Background"      Value="#FF3A3A3F"/>
+        <Setter Property="Foreground"      Value="{StaticResource AppTextBrush}"/>
+        <Setter Property="BorderBrush"     Value="{StaticResource AppBorderBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding"         Value="14,7"/>
+        <Setter Property="FontFamily"      Value="{StaticResource AppFont}"/>
+        <Setter Property="FontSize"        Value="13"/>
+        <Setter Property="Cursor"          Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Root"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="6"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Root" Property="Background" Value="#FF4A4A50"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Root" Property="Background" Value="#FF2A2A2F"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{StaticResource AppTextMutedBrush}"/>
+                            <Setter TargetName="Root" Property="Opacity" Value="0.5"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         OCR FLOATING BUTTON  (large pill, bottom-right, accent colour)
+         State-specific colours via DataTriggers in code / view.
+    ═══════════════════════════════════════════════════════════════════════════ -->
+    <Style x:Key="OcrFloatingButtonStyle" TargetType="Button">
+        <Setter Property="Background"      Value="{StaticResource AppAccentBrush}"/>
+        <Setter Property="Foreground"      Value="White"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding"         Value="22,12"/>
+        <Setter Property="FontFamily"      Value="{StaticResource AppFont}"/>
+        <Setter Property="FontSize"        Value="14"/>
+        <Setter Property="FontWeight"      Value="SemiBold"/>
+        <Setter Property="Cursor"          Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Root"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="24"
+                            Padding="{TemplateBinding Padding}"
+                            SnapsToDevicePixels="True">
+                        <Border.Effect>
+                            <DropShadowEffect Color="#000000" Opacity="0.4"
+                                              BlurRadius="20" ShadowDepth="4"/>
+                        </Border.Effect>
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Root" Property="Background">
+                                <Setter.Value>
+                                    <SolidColorBrush Color="{StaticResource AppAccentHoverColor}"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Root" Property="Background">
+                                <Setter.Value>
+                                    <SolidColorBrush Color="{StaticResource AppAccentPressedColor}"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Root" Property="Background" Value="#FF555555"/>
+                            <Setter Property="Foreground" Value="#FF999999"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         PROGRESS BAR  — thin accent strip, indeterminate
+    ═══════════════════════════════════════════════════════════════════════════ -->
+    <Style TargetType="ProgressBar">
+        <Setter Property="Background"    Value="#FF333338"/>
+        <Setter Property="Foreground"    Value="{StaticResource AppAccentBrush}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Height"        Value="3"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ProgressBar">
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="1.5" ClipToBounds="True">
+                        <Rectangle x:Name="PART_Indicator"
+                                   HorizontalAlignment="Left"
+                                   Fill="{TemplateBinding Foreground}"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>
