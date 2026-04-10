@@ -1,0 +1,112 @@
+name: Build Alternatives
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag (e.g. v1.0.0-pre) — leave empty to use "pre"'
+        required: false
+        default: 'pre'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Publish single-file EXE
+        run: |
+          dotnet publish LittleOCR/LittleOCR.csproj `
+            -c Release `
+            -r win-x64 `
+            --self-contained true `
+            -p:PublishSingleFile=true `
+            -p:IncludeNativeLibrariesForSelfExtract=true `
+            -p:EnableCompressionInSingleFile=true `
+            -p:DebugType=none `
+            -p:DebugSymbols=false `
+            -o publish
+        shell: pwsh
+
+      # ── Tesseract language data ──────────────────────────────────────────────
+      # Placed in publish/tessdata/ so the exe finds them next to itself.
+      # Uses tessdata-fast models (~4 MB each) for a good speed/accuracy balance.
+      # Users who only need Windows OCR can skip this folder — it is only required
+      # when the "Tesseract (caractères)" engine is selected inside the app.
+      - name: Download Tesseract language data
+        run: |
+          $tessDir = "publish\tessdata"
+          New-Item -ItemType Directory -Force -Path $tessDir | Out-Null
+          Invoke-WebRequest -Uri "https://github.com/tesseract-ocr/tessdata_fast/raw/main/fra.traineddata" `
+            -OutFile "$tessDir\fra.traineddata"
+          Invoke-WebRequest -Uri "https://github.com/tesseract-ocr/tessdata_fast/raw/main/eng.traineddata" `
+            -OutFile "$tessDir\eng.traineddata"
+        shell: pwsh
+
+      # ── Create release archive ───────────────────────────────────────────────
+      # The zip bundles the exe + tessdata together so the Tesseract engine works
+      # out of the box. Users who only need Windows OCR can extract just the exe.
+      - name: Create release archive
+        run: |
+          Push-Location publish
+          Compress-Archive -Path @("LittleOCR.exe", "tessdata") -DestinationPath "LittleOCR.zip"
+          Pop-Location
+        shell: pwsh
+
+      - name: Upload EXE artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: LittleOCR-exe
+          path: publish/LittleOCR.exe
+          if-no-files-found: error
+
+      - name: Upload ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: LittleOCR-zip
+          path: publish/LittleOCR.zip
+          if-no-files-found: error
+
+  release:
+    if: github.event_name == 'workflow_dispatch'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download EXE artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: LittleOCR-exe
+          path: dist
+
+      - name: Download ZIP artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: LittleOCR-zip
+          path: dist
+
+      - name: Create or update pre-release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag }}
+          name: ${{ github.event.inputs.tag }}
+          prerelease: true
+          make_latest: false
+          files: |
+            dist/LittleOCR.exe
+            dist/LittleOCR.zip
