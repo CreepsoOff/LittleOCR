@@ -8,8 +8,9 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Release tag (e.g. v1.0.0-pre)'
-        required: true
+        description: 'Release tag (e.g. v1.0.0-pre) — leave empty to use "pre"'
+        required: false
+        default: 'pre'
 
 jobs:
   build:
@@ -76,10 +77,11 @@ jobs:
           name: LittleOCR
           path: dist
 
-      - name: Create pre-release
+      - name: Create or update pre-release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.event.inputs.tag }}
           name: ${{ github.event.inputs.tag }}
           prerelease: true
+          make_latest: false
           files: dist/LittleOCR.exe
