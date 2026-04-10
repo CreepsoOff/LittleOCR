@@ -24,7 +24,7 @@
     <SolidColorBrush x:Key="AppBorderBrush"    Color="{StaticResource AppBorderColor}"/>
     <SolidColorBrush x:Key="AppAccentBrush"   Color="{StaticResource AppAccentColor}"/>
     <SolidColorBrush x:Key="AppTextBrush"     Color="{StaticResource AppTextColor}"/>
-    <SolidColorBrush x:Key="AppTextMutedBrush"Color="{StaticResource AppTextMutedColor}"/>
+    <SolidColorBrush x:Key="AppTextMutedBrush" Color="{StaticResource AppTextMutedColor}"/>
     <SolidColorBrush x:Key="AppSuccessBrush"  Color="{StaticResource AppSuccessColor}"/>
     <SolidColorBrush x:Key="AppErrorBrush"    Color="{StaticResource AppErrorColor}"/>
     <SolidColorBrush x:Key="AppWarningBrush"  Color="{StaticResource AppWarningColor}"/>
